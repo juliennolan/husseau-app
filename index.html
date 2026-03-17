@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="apple-touch-icon" href="icon.jpg">
+<title>husseau — Private Client Experience</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&family=Outfit:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#FAF7F2;--ivory:#F2EDE3;--ivory-deep:#E8E0D0;
+  --sand:#C9B99A;--gold:#A8894A;--gold-light:#D4B87A;
+  --charcoal:#2C2620;--muted:#7A6E62;--warm-white:#FDFAF5;
+  --ff-d:'Cormorant Garamond',Georgia,serif;
+  --ff-b:'Jost',system-ui,sans-serif;
+  --ff-logo:'Outfit',system-ui,sans-serif;
+}
+html,body{min-height:100vh;background:var(--cream);color:var(--charcoal);font-family:var(--ff-b);font-weight:300}
+nav{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2.5rem;background:var(--warm-white);border-bottom:0.5px solid var(--ivory-deep);position:sticky;top:0;z-index:200}
+.nav-logo{font-family:var(--ff-logo);font-size:1.35rem;font-weight:400;letter-spacing:0;color:var(--charcoal);cursor:pointer}
+.nav-tabs{display:flex;gap:0}
+.nav-tab{font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);padding:0.5rem 1.2rem;cursor:pointer;border:0.5px solid transparent;transition:all 0.2s;background:none;font-family:var(--ff-b);font-weight:300}
+.nav-tab:hover{color:var(--gold)}
+.nav-tab.active{color:var(--charcoal);border-color:var(--ivory-deep);background:var(--cream)}
+.nav-portal-btn{font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;background:none;border:0.5px solid var(--sand);color:var(--muted);padding:0.5rem 1.1rem;cursor:pointer;font-family:var(--ff-b);font-weight:300;transition:all 0.2s}
+.nav-portal-btn:hover{border-color:var(--gold);color:var(--gold)}
+.screen{display:none;min-height:calc(100vh - 57px)}
+.screen.active{display:block;animation:fadeUp 0.45s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.entry-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 57px);text-align:center;padding:4rem 2rem;background:var(--cream)}
+.entry-ornament{width:1px;height:50px;background:var(--sand);margin:0 auto 2rem}
+.entry-eyebrow{font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1.8rem}
+.entry-title{font-family:var(--ff-d);font-size:clamp(3rem,6vw,5rem);font-weight:300;line-height:1.08;color:var(--charcoal);margin-bottom:1.5rem}
+.entry-title em{font-style:italic;color:var(--gold)}
+.entry-sub{font-family:var(--ff-d);font-size:1.05rem;font-weight:300;font-style:italic;color:var(--muted);max-width:420px;line-height:1.9;margin-bottom:3.5rem}
+.entry-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ivory-deep);border:0.5px solid var(--ivory-deep);max-width:780px;width:100%;margin-bottom:3rem}
+.entry-card{background:var(--warm-white);padding:2.2rem 1.8rem;cursor:pointer;transition:background 0.2s;text-align:left}
+.entry-card:hover{background:var(--ivory)}
+.entry-card-num{font-size:0.55rem;letter-spacing:0.25em;color:var(--gold);margin-bottom:0.8rem}
+.entry-card-title{font-family:var(--ff-d);font-size:1.2rem;font-weight:300;color:var(--charcoal);margin-bottom:0.5rem;line-height:1.2}
+.entry-card-desc{font-size:0.73rem;color:var(--muted);line-height:1.7}
+.entry-card-arrow{font-size:0.65rem;color:var(--gold);margin-top:1rem;display:block;letter-spacing:0.1em}
+.quiz-wrap{max-width:680px;margin:0 auto;padding:5rem 2rem}
+.quiz-progress{display:flex;gap:4px;margin-bottom:3rem}
+.quiz-prog-dot{flex:1;height:2px;background:var(--ivory-deep);transition:background 0.4s}
+.quiz-prog-dot.done{background:var(--gold)}
+.quiz-step{display:none;animation:fadeUp 0.35s ease both}
+.quiz-step.active{display:block}
+.quiz-q-num{font-size:0.58rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+.quiz-q-text{font-family:var(--ff-d);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:300;line-height:1.3;color:var(--charcoal);margin-bottom:2.5rem}
+.quiz-q-text em{font-style:italic;color:var(--gold)}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.quiz-opt{padding:1.2rem 1.4rem;border:0.5px solid var(--ivory-deep);background:var(--warm-white);cursor:pointer;transition:all 0.2s;text-align:left}
+.quiz-opt:hover{border-color:var(--sand);background:var(--ivory)}
+.quiz-opt.selected{border-color:var(--gold);background:var(--ivory)}
+.quiz-opt-label{font-size:0.78rem;color:var(--charcoal);line-height:1.5;font-weight:400}
+.quiz-opt-sub{font-size:0.68rem;color:var(--muted);margin-top:0.2rem}
+.quiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:2.5rem}
+.quiz-back{font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--ff-b);font-weight:300}
+.quiz-back:hover{color:var(--gold)}
+.quiz-next{font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;background:var(--charcoal);color:var(--warm-white);border:none;padding:0.8rem 2rem;cursor:pointer;font-family:var(--ff-b);font-weight:300;transition:background 0.2s}
+.quiz-next:hover{background:var(--gold)}
+.quiz-next:disabled{opacity:0.35;cursor:default}
+.quiz-result{display:none;text-align:center;padding:3rem 0;animation:fadeUp 0.4s ease both}
+.quiz-result.active{display:block}
+.result-mark{font-size:1.2rem;color:var(--gold);margin-bottom:1.5rem}
+.result-profile{font-family:var(--ff-d);font-size:2rem;font-weight:300;color:var(--charcoal);margin-bottom:0.8rem}
+.result-desc{font-size:0.82rem;color:var(--muted);line-height:1.9;max-width:480px;margin:0 auto 2.5rem}
+.result-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:2.5rem}
+.result-tag{font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;border:0.5px solid var(--sand);color:var(--muted);padding:0.3rem 0.8rem}
+.result-cta{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-p{background:var(--charcoal);color:var(--warm-white);border:none;padding:0.85rem 2rem;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;font-family:var(--ff-b);font-weight:300;transition:background 0.2s}
+.btn-p:hover{background:var(--gold)}
+.btn-g{background:transparent;color:var(--charcoal);border:0.5px solid var(--sand);padding:0.85rem 2rem;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;font-family:var(--ff-b);font-weight:300;transition:all 0.2s}
+.btn-g:hover{border-color:var(--gold);color:var(--gold)}
+.concierge-layout{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 57px)}
+.concierge-sidebar{background:var(--warm-white);border-right:0.5px solid var(--ivory-deep);padding:2rem 1.5rem;display:flex;flex-direction:column;gap:1.5rem}
+.sidebar-logo{font-family:var(--ff-logo);font-size:1.1rem;font-weight:400;letter-spacing:0;color:var(--charcoal);padding-bottom:1rem;border-bottom:0.5px solid var(--ivory-deep)}
+.sidebar-label{font-size:0.55rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem}
+.sidebar-profile{font-size:0.78rem;color:var(--muted);line-height:1.7}
+.sidebar-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:0.4rem}
+.sidebar-tag{font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;border:0.5px solid var(--ivory-deep);color:var(--muted);padding:0.2rem 0.5rem}
+.sidebar-wishlist{flex:1;overflow-y:auto}
+.wishlist-item{display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:0.5px solid var(--ivory-deep)}
+.wishlist-item-name{font-size:0.75rem;color:var(--charcoal)}
+.wishlist-remove{background:none;border:none;color:var(--sand);cursor:pointer;font-size:0.9rem;line-height:1;padding:0 0.2rem}
+.wishlist-remove:hover{color:var(--gold)}
+.wishlist-empty{font-size:0.75rem;color:var(--muted);font-style:italic;font-family:var(--ff-d)}
+.sidebar-submit-btn{width:100%;background:var(--charcoal);color:var(--warm-white);border:none;padding:0.8rem;font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;font-family:var(--ff-b);font-weight:300;transition:background 0.2s;margin-top:auto}
+.sidebar-submit-btn:hover{background:var(--gold)}
+.chat-area{display:flex;flex-direction:column;height:calc(100vh - 57px)}
+.chat-header{padding:1.2rem 2rem;border-bottom:0.5px solid var(--ivory-deep);background:var(--cream)}
+.chat-header-title{font-family:var(--ff-d);font-size:1.1rem;font-weight:300;color:var(--charcoal)}
+.chat-header-sub{font-size:0.65rem;color:var(--muted);margin-top:0.2rem;letter-spacing:0.08em}
+.chat-messages{flex:1;overflow-y:auto;padding:2rem;display:flex;flex-direction:column;gap:1.2rem}
+.msg{max-width:72%;animation:fadeUp 0.3s ease both}
+.msg.assistant{align-self:flex-start}
+.msg.user{align-self:flex-end}
+.msg-bubble{padding:1rem 1.3rem;line-height:1.75;font-size:0.82rem}
+.msg.assistant .msg-bubble{background:var(--warm-white);border:0.5px solid var(--ivory-deep);color:var(--charcoal)}
+.msg.user .msg-bubble{background:var(--charcoal);color:var(--warm-white)}
+.msg-sender{font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem}
+.msg.user .msg-sender{text-align:right}
+.add-to-wish{display:inline-block;margin-top:0.5rem;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);cursor:pointer;border:0.5px solid var(--gold-light);padding:0.22rem 0.6rem;background:none;font-family:var(--ff-b);transition:all 0.2s}
+.add-to-wish:hover{background:var(--gold);color:var(--warm-white)}
+.typing-indicator{align-self:flex-start;max-width:72%}
+.typing-dots{display:flex;gap:5px;padding:1rem 1.3rem;background:var(--warm-white);border:0.5px solid var(--ivory-deep)}
+.typing-dots span{width:6px;height:6px;border-radius:50%;background:var(--sand);animation:bounce 1.2s infinite}
+.typing-dots span:nth-child(2){animation-delay:0.2s}
+.typing-dots span:nth-child(3){animation-delay:0.4s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+.chat-input-area{padding:1.2rem 2rem;border-top:0.5px solid var(--ivory-deep);background:var(--warm-white);display:flex;gap:0.8rem;align-items:flex-end}
+.chat-input{flex:1;background:var(--cream);border:0.5px solid var(--ivory-deep);padding:0.75rem 1rem;font-size:0.82rem;font-family:var(--ff-b);font-weight:300;color:var(--charcoal);outline:none;resize:none;min-height:44px;max-height:120px;line-height:1.5;transition:border-color 0.2s}
+.chat-input:focus{border-color:var(--gold)}
+.chat-send{background:var(--charcoal);color:var(--warm-white);border:none;padding:0.75rem 1.4rem;font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;font-family:var(--ff-b);font-weight:300;transition:background 0.2s;white-space:nowrap;align-self:stretch}
+.chat-send:hover{background:var(--gold)}
+.chat-send:disabled{opacity:0.4;cursor:default}
+.quick-prompts{display:flex;flex-wrap:wrap;gap:6px;padding:0.8rem 2rem 0}
+.quick-prompt{font-size:0.62rem;letter-spacing:0.08em;border:0.5px solid var(--ivory-deep);background:var(--warm-white);color:var(--muted);padding:0.35rem 0.75rem;cursor:pointer;font-family:var(--ff-b);transition:all 0.2s}
+.quick-prompt:hover{border-color:var(--gold);color:var(--gold)}
+.portal-entry{max-width:440px;margin:0 auto;padding:6rem 2rem;text-align:center}
+.portal-ornament{width:1px;height:40px;background:var(--sand);margin:0 auto 2rem}
+.portal-title{font-family:var(--ff-d);font-size:2rem;font-weight:300;color:var(--charcoal);margin-bottom:0.6rem}
+.portal-sub{font-size:0.78rem;color:var(--muted);line-height:1.8;margin-bottom:2.5rem}
+.portal-form{display:flex;flex-direction:column;gap:0.8rem}
+.portal-input{background:var(--warm-white);border:0.5px solid var(--ivory-deep);padding:0.85rem 1rem;font-size:0.85rem;font-family:var(--ff-b);font-weight:300;color:var(--charcoal);outline:none;text-align:center;letter-spacing:0.12em;transition:border-color 0.2s}
+.portal-input:focus{border-color:var(--gold)}
+.portal-btn{background:var(--charcoal);color:var(--warm-white);border:none;padding:0.9rem;font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;font-family:var(--ff-b);font-weight:300;transition:background 0.2s}
+.portal-btn:hover{background:var(--gold)}
+.portal-hint{font-size:0.68rem;color:var(--muted);margin-top:0.5rem;font-family:var(--ff-d);font-style:italic}
+.portal-error{font-size:0.72rem;color:#a32d2d;margin-top:0.3rem;display:none}
+.portal-dash{display:none;max-width:860px;margin:0 auto;padding:3rem 2rem 5rem}
+.portal-dash.visible{display:block;animation:fadeUp 0.4s ease both}
+.portal-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:0.5px solid var(--ivory-deep)}
+.portal-welcome{font-family:var(--ff-d);font-size:1.8rem;font-weight:300;color:var(--charcoal)}
+.portal-welcome span{font-style:italic;color:var(--gold)}
+.portal-logout{font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--ff-b)}
+.portal-logout:hover{color:var(--gold)}
+.portal-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem}
+.portal-card{background:var(--warm-white);border:0.5px solid var(--ivory-deep);padding:1.8rem}
+.portal-card-label{font-size:0.58rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem}
+.portal-card-title{font-family:var(--ff-d);font-size:1.3rem;font-weight:300;color:var(--charcoal);margin-bottom:0.5rem}
+.portal-card-body{font-size:0.78rem;color:var(--muted);line-height:1.8}
+.itinerary-days{margin-top:1.5rem}
+.itin-day{border-left:1px solid var(--ivory-deep);padding-left:1.2rem;margin-bottom:1.5rem;position:relative}
+.itin-day::before{content:'';position:absolute;left:-3.5px;top:6px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+.itin-day-label{font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem}
+.itin-day-title{font-family:var(--ff-d);font-size:1rem;font-weight:300;color:var(--charcoal);margin-bottom:0.3rem}
+.itin-day-body{font-size:0.75rem;color:var(--muted);line-height:1.7}
+.portal-contact-strip{background:var(--ivory);border:0.5px solid var(--ivory-deep);padding:1.5rem 1.8rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.portal-contact-label{font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem}
+.portal-contact-val{font-family:var(--ff-d);font-size:0.95rem;color:var(--charcoal)}
+.portal-contact-val a{color:var(--charcoal);text-decoration:none}
+.portal-contact-val a:hover{color:var(--gold)}
+footer{background:var(--charcoal);padding:2rem 2.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.ft-logo{font-family:var(--ff-logo);font-size:1.1rem;font-weight:400;letter-spacing:0;color:rgba(253,250,245,0.85)}
+.ft-copy{font-size:0.62rem;color:rgba(253,250,245,0.3);letter-spacing:0.08em}
+.ft-contact{font-size:0.65rem;color:rgba(253,250,245,0.4)}
+.ft-contact a{color:rgba(253,250,245,0.4);text-decoration:none}
+.submitted-overlay{display:none;position:fixed;inset:0;background:rgba(44,38,32,0.88);z-index:500;align-items:center;justify-content:center}
+.submitted-overlay.visible{display:flex;animation:fadeUp 0.3s ease both}
+.submitted-box{background:var(--warm-white);max-width:440px;padding:3.5rem;text-align:center;border:0.5px solid var(--ivory-deep)}
+.submitted-mark{font-size:1.5rem;color:var(--gold);margin-bottom:1.2rem}
+.submitted-title{font-family:var(--ff-d);font-size:2rem;font-weight:300;color:var(--charcoal);margin-bottom:0.8rem}
+.submitted-sub{font-size:0.8rem;color:var(--muted);line-height:1.9;margin-bottom:2rem}
+.submitted-close{background:var(--charcoal);color:var(--warm-white);border:none;padding:0.8rem 2rem;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;font-family:var(--ff-b)}
+.submitted-close:hover{background:var(--gold)}
+@media(max-width:768px){
+  .entry-cards{grid-template-columns:1fr}
+  .concierge-layout{grid-template-columns:1fr}
+  .concierge-sidebar{display:none}
+  .quiz-options{grid-template-columns:1fr}
+  .portal-grid{grid-template-columns:1fr}
+  nav{padding:1rem 1.2rem}
+  .nav-tabs{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo" onclick="showScreen('home')">husseau</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showScreen('home',this)">Home</button>
+    <button class="nav-tab" onclick="showScreen('quiz',this)">Travel Profile</button>
+    <button class="nav-tab" onclick="showScreen('concierge',this)">Concierge</button>
+  </div>
+  <button class="nav-portal-btn" onclick="showScreen('portal',this)">Client Portal</button>
+</nav>
+
+<div class="screen active" id="screen-home">
+  <div class="entry-screen">
+    <div class="entry-ornament"></div>
+    <p class="entry-eyebrow">Haute Couture Journeys &nbsp;·&nbsp; Houston-based. Operating globally.</p>
+    <h1 class="entry-title">Your private<br><em>husseau</em> experience</h1>
+    <p class="entry-sub">This is not a website. This is your personal space — to discover your travel style, speak with your concierge, and manage your journey.</p>
+    <div class="entry-cards">
+      <div class="entry-card" onclick="showScreen('quiz',document.querySelectorAll('.nav-tab')[1])">
+        <div class="entry-card-num">01</div>
+        <div class="entry-card-title">Discover Your Travel Profile</div>
+        <div class="entry-card-desc">A short, beautiful quiz that defines your travel style and what kind of journeys speak to you.</div>
+        <span class="entry-card-arrow">Begin &rarr;</span>
+      </div>
+      <div class="entry-card" onclick="showScreen('concierge',document.querySelectorAll('.nav-tab')[2])">
+        <div class="entry-card-num">02</div>
+        <div class="entry-card-title">Speak With Your Husseau Concierge</div>
+        <div class="entry-card-desc">An AI concierge trained on Husseau's philosophy. Ask anything, build your wish list, begin a journey.</div>
+        <span class="entry-card-arrow">Open &rarr;</span>
+      </div>
+      <div class="entry-card" onclick="showScreen('portal',null)">
+        <div class="entry-card-num">03</div>
+        <div class="entry-card-title">Client Portal</div>
+        <div class="entry-card-desc">Existing Husseau clients — access your private itinerary, contacts, and journey details.</div>
+        <span class="entry-card-arrow">Enter &rarr;</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-quiz">
+  <div class="quiz-wrap">
+    <div class="quiz-progress" id="quiz-progress"></div>
+    <div class="quiz-step active" data-step="0">
+      <div class="quiz-q-num">Question 1 of 5</div>
+      <h2 class="quiz-q-text">When you close your eyes and imagine <em>the perfect journey</em>, what do you see first?</h2>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="selectOpt(this,0,0)"><div class="quiz-opt-label">A clifftop villa at golden hour</div><div class="quiz-opt-sub">Mediterranean light, sea below, silence</div></div>
+        <div class="quiz-opt" onclick="selectOpt(this,0,1)"><div class="quiz-opt-label">An ancient city, no crowds</div><div class="quiz-opt-sub">Culture, art, private access</div></div>
+        <div class="quiz-opt" onclick="selectOpt(this,0,2)"><div class="quiz-opt-label">A wilderness camp at dawn</div><div class="quiz-opt-sub">Wildlife, vastness, stillness</div></div>
+        <div class="quiz-opt" onclick="selectOpt(this,0,3)"><div class="quiz-opt-label">A private yacht, open water</div><div class="quiz-opt-sub">Freedom, the horizon, total privacy</div></div>
+      </div>
+      <div class="quiz-nav"><span></span><button class="quiz-next" onclick="nextStep(1)" disabled>Continue &rarr;</button></div>
+    </div>
+    <div class="quiz-step" data-step="1">
+      <div class="quiz-q-num">Question 2 of 5</div>
+      <h2 class="quiz-q-text">How do you prefer your <em>days</em> to feel?</h2>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="selectOpt(this,1,0)"><div class="quiz-opt-label">Deliberately unhurried</div><div class="quiz-opt-sub">No agenda — only rhythm and mood</div></div>
+        <div class="quiz-opt" onclick="selectOpt(this,1,1)"><div class="quiz-opt-label">Richly curated</div><div class="quiz-opt-sub">Each hour purposeful, nothing wasted</div></div>
+        <div class="quiz-opt" onclick="selectOpt(this,1,2)"><div class="quiz-opt-label">Spontaneous within structure</div><div class="quiz-opt-sub">A foundation — but space to wander</div></div>
+        <div class="quiz-opt" onclick="selectOpt(this,1,3)"><div class="quiz-opt-label">Complete immersion</div><div class="quiz-opt-sub">Lose myself in place entirely</div></div>
+      </div>
+      <div class="quiz-nav"><button class="quiz-back" onclick="prevStep(0)">&larr; Back</button><button class="quiz-next" onclick="nextStep(2)" disabled>Continue &rarr;</button></div>
+    </div>
+    <div class="quiz-step" data-step="2">
+      <div class="quiz-q-num">Question 3 of 5</div>
+      <h2 class="quiz-q-text">What does <em>luxury</em> mean to you when you travel?</h2>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="selectOpt(this,2,0)"><div class="quiz-opt-label">Absolute privacy</div><div class="quiz-opt-sub">No one else. Just us.</div></div>
+        <div class="quiz-opt" onclick="selectOpt(this,2,1)"><div class="quiz-opt-label">Access no one else has</div><div class="quiz-opt-sub">The closed door, opened</div></div>
+        <div class="quiz-opt" onclick="selectOpt(this,2,2)"><div class="quiz-opt-label">Flawless service, invisible</div><div class="quiz-opt-sub">Everything handled before I notice</div></div>
+        <div class="quiz-opt" onclick="selectOpt(this,2,3)"><div class="quiz-opt-label">Extraordinary spaces</div><div class="quiz-opt-sub">Architecture, design, beauty of place</div></div>
+      </div>
+      <div class="quiz-nav"><button class="quiz-back" onclick="prevStep(1)">&larr; Back</button><button class="quiz-next" onclick="nextStep(3)" disabled>Continue &rarr;</button></div>
+    </div>
+    <div class="quiz-step" data-step="3">
+      <div class="quiz-q-num">Question 4 of 5</div>
+      <h2 class="quiz-q-text">Which region calls to you <em>most deeply</em> right now?</h2>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="selectOpt(this,3,0)"><div class="quiz-opt-label">Europe</div><div class="quiz-opt-sub">Italy, France, Greece, Monaco</div></div>
+        <div class="quiz-opt" onclick="selectOpt(this,3,1)"><div class="quiz-opt-label">Asia &amp; the Pacific</div><div class="quiz-opt-sub">Japan, Bali, French Polynesia</div></div>
+        <div class="quiz-opt" onclick="selectOpt(this,3,2)"><div class="quiz-opt-label">Africa</div><div class="quiz-opt-sub">Tanzania, Kenya, Morocco</div></div>
+        <div class="quiz-opt" onclick="selectOpt(this,3,3)"><div class="quiz-opt-label">Surprise me</div><div class="quiz-opt-sub">I trust Husseau's judgment entirely</div></div>
+      </div>
+      <div class="quiz-nav"><button class="quiz-back" onclick="prevStep(2)">&larr; Back</button><button class="quiz-next" onclick="nextStep(4)" disabled>Continue &rarr;</button></div>
+    </div>
+    <div class="quiz-step" data-step="4">
+      <div class="quiz-q-num">Question 5 of 5</div>
+      <h2 class="quiz-q-text">If your ideal trip had a single <em>defining moment</em>, it would be...</h2>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="selectOpt(this,4,0)"><div class="quiz-opt-label">A private dinner in an impossible place</div><div class="quiz-opt-sub">A rooftop, a cave, a vineyard at midnight</div></div>
+        <div class="quiz-opt" onclick="selectOpt(this,4,1)"><div class="quiz-opt-label">A cultural encounter, no tourists</div><div class="quiz-opt-sub">A museum before opening, a studio visit</div></div>
+        <div class="quiz-opt" onclick="selectOpt(this,4,2)"><div class="quiz-opt-label">A natural spectacle, entirely private</div><div class="quiz-opt-sub">Safari at dawn, swimming with no one else</div></div>
+        <div class="quiz-opt" onclick="selectOpt(this,4,3)"><div class="quiz-opt-label">Pure stillness in a perfect space</div><div class="quiz-opt-sub">A bath drawn at sunset, nothing asked of me</div></div>
+      </div>
+      <div class="quiz-nav"><button class="quiz-back" onclick="prevStep(3)">&larr; Back</button><button class="quiz-next" onclick="showQuizResult()" disabled>See My Profile &rarr;</button></div>
+    </div>
+    <div class="quiz-result" id="quiz-result">
+      <div class="result-mark">&#10022;</div>
+      <div class="result-profile" id="result-profile-name">The Sovereign Wanderer</div>
+      <p class="result-desc" id="result-profile-desc"></p>
+      <div class="result-tags" id="result-tags"></div>
+      <div class="result-cta">
+        <button class="btn-p" onclick="goToConcierge()">Speak With Your Concierge &rarr;</button>
+        <button class="btn-g" onclick="showScreen('home',null)">Return Home</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-concierge">
+  <div class="concierge-layout">
+    <div class="concierge-sidebar">
+      <div class="sidebar-logo">husseau<br><span style="font-size:0.58rem;font-family:var(--ff-b);letter-spacing:0.18em;color:var(--muted);text-transform:uppercase;font-weight:300;">Concierge</span></div>
+      <div>
+        <div class="sidebar-label">Your Profile</div>
+        <div class="sidebar-profile" id="sidebar-profile-text">Complete your Travel Profile quiz to personalise this experience.</div>
+        <div class="sidebar-tags" id="sidebar-profile-tags"></div>
+      </div>
+      <div class="sidebar-wishlist" style="flex:1">
+        <div class="sidebar-label">Wish List</div>
+        <div id="wishlist-items"><div class="wishlist-empty">Your wish list is empty. Ask your concierge for ideas.</div></div>
+      </div>
+      <button class="sidebar-submit-btn" onclick="submitWishlist()">Submit Wish List to Husseau</button>
+    </div>
+    <div class="chat-area">
+      <div class="chat-header">
+        <div class="chat-header-title">Your Husseau Concierge</div>
+        <div class="chat-header-sub">Powered by Husseau's philosophy of discretion, intention &amp; depth</div>
+      </div>
+      <div class="quick-prompts" id="quick-prompts">
+        <button class="quick-prompt" onclick="sendQuick('What makes Husseau different from a regular travel agency?')">What makes Husseau different?</button>
+        <button class="quick-prompt" onclick="sendQuick('Suggest a journey for someone who wants total privacy in Europe.')">Private Europe journey</button>
+        <button class="quick-prompt" onclick="sendQuick('What are the best African safari experiences Husseau can arrange?')">African safari options</button>
+        <button class="quick-prompt" onclick="sendQuick('Tell me about the hotel partner programs and client benefits.')">Hotel partner perks</button>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <div class="msg assistant">
+          <div class="msg-sender">Husseau Concierge</div>
+          <div class="msg-bubble">Bonsoir. I am your Husseau concierge — here to help you imagine, plan, and refine a journey that is entirely your own.<br><br>You may ask me anything: destinations, experiences, what to expect from Husseau, or simply where to begin. What is on your mind?</div>
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <textarea class="chat-input" id="chat-input" placeholder="Ask your concierge anything..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="chat-send" id="chat-send-btn" onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-portal">
+  <div class="portal-entry" id="portal-login">
+    <div class="portal-ornament"></div>
+    <div class="portal-title">Client Portal</div>
+    <p class="portal-sub">Enter your private access code to view your journey details, itinerary, and concierge contacts.</p>
+    <div class="portal-form">
+      <input class="portal-input" id="portal-code" type="text" placeholder="ACCESS CODE" maxlength="12" oninput="this.value=this.value.toUpperCase()">
+      <div class="portal-error" id="portal-error">Code not recognised. Please check and try again, or contact info@husseau.com</div>
+      <button class="portal-btn" onclick="checkPortal()">Enter &rarr;</button>
+      <div class="portal-hint">Your access code was provided by Julien or your Husseau advisor. Try: AMALFI2026</div>
+    </div>
+  </div>
+  <div class="portal-dash" id="portal-dashboard">
+    <div class="portal-header">
+      <div>
+        <div style="font-size:0.58rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;">Private Client Portal</div>
+        <div class="portal-welcome">Welcome back, <span id="portal-client-name">Eleanor</span>.</div>
+      </div>
+      <button class="portal-logout" onclick="portalLogout()">Sign Out</button>
+    </div>
+    <div class="portal-grid">
+      <div class="portal-card">
+        <div class="portal-card-label">Your Journey</div>
+        <div class="portal-card-title">La Dolce Vita — Amalfi &amp; Rome</div>
+        <div class="portal-card-body">10 nights &middot; 2 travellers &middot; Departing May 12, 2026<br><br>Status: <span style="color:var(--gold);font-weight:400;">Confirmed &amp; Arranged</span></div>
+      </div>
+      <div class="portal-card">
+        <div class="portal-card-label">Your Advisor</div>
+        <div class="portal-card-title">Julien Nolan</div>
+        <div class="portal-card-body">Founder &amp; Lead Advisor<br><br>info@husseau.com<br><a href="tel:+13108920433" style="color:var(--muted);">+1 310 892 0433</a></div>
+      </div>
+    </div>
+    <div class="portal-card" style="margin-bottom:1rem">
+      <div class="portal-card-label">Your Itinerary</div>
+      <div class="portal-card-title" style="margin-bottom:1.5rem">Day by Day</div>
+      <div class="itinerary-days">
+        <div class="itin-day">
+          <div class="itin-day-label">Day 1 &middot; May 12 &middot; Arrival</div>
+          <div class="itin-day-title">Naples — Private Transfer to Positano</div>
+          <div class="itin-day-body">Met on arrival at Naples Capodichino. Private Mercedes transfer along the Amalfi Drive. Check-in at your cliffside villa — champagne and dinner prepared on your terrace as the sun sets over the Tyrrhenian Sea.</div>
+        </div>
+        <div class="itin-day">
+          <div class="itin-day-label">Days 2–4 &middot; Positano</div>
+          <div class="itin-day-title">Villa Immersion — Time at Your Own Rhythm</div>
+          <div class="itin-day-body">Private chef breakfasts. A morning yacht to Capri with a local captain. Private guided walk through coastal paths. Chef's table dinner at a restaurant not open to the public.</div>
+        </div>
+        <div class="itin-day">
+          <div class="itin-day-label">Days 5–7 &middot; Ravello &amp; Amalfi</div>
+          <div class="itin-day-title">Gardens, Coast &amp; La Dolce Vita</div>
+          <div class="itin-day-body">Private dawn access to Villa Cimbrone gardens. Ceramic workshop with a Vietri master. Sunset aperitivo on Amalfi's hidden rooftop — yours alone for the evening.</div>
+        </div>
+        <div class="itin-day">
+          <div class="itin-day-label">Days 8–10 &middot; Rome</div>
+          <div class="itin-day-title">The Eternal City — Private &amp; Unhurried</div>
+          <div class="itin-day-body">Vatican before the crowds with a private art historian. Lunch reserved exclusively through Husseau's dining program. Final farewell dinner, Campo de' Fiori, under the stars.</div>
+        </div>
+      </div>
+    </div>
+    <div class="portal-contact-strip">
+      <div><div class="portal-contact-label">24/7 Concierge</div><div class="portal-contact-val"><a href="tel:+13108920433">+1 310 892 0433</a></div></div>
+      <div><div class="portal-contact-label">Email</div><div class="portal-contact-val">info@husseau.com</div></div>
+      <div><div class="portal-contact-label">Website</div><div class="portal-contact-val"><a href="https://husseau.com" target="_blank">husseau.com</a></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="submitted-overlay" id="submitted-overlay">
+  <div class="submitted-box">
+    <div class="submitted-mark">&#10022;</div>
+    <div class="submitted-title">Wish list received.</div>
+    <p class="submitted-sub">Your wish list has been submitted to the Husseau team. Julien or your advisor will be in touch within 24 hours.<br><br>info@husseau.com &nbsp;&middot;&nbsp; +1 310 892 0433</p>
+    <button class="submitted-close" onclick="document.getElementById('submitted-overlay').classList.remove('visible')">Close</button>
+  </div>
+</div>
+
+<footer>
+  <div class="ft-logo">husseau</div>
+  <div class="ft-contact">info@husseau.com &nbsp;&middot;&nbsp; <a href="tel:+13108920433">+1 310 892 0433</a> &nbsp;&middot;&nbsp; <a href="https://husseau.com" target="_blank">husseau.com</a></div>
+  <div class="ft-copy">Houston-based. Operating globally. &copy; 2026</div>
+</footer>
+<script type="text/javascript">
+var wishlist=[];
+var chatHistory=[];
+var isTyping=false;
+var quizAnswers=[null,null,null,null,null];
+var quizProfile=null;
+
+var profiles=[
+  {name:'The Sovereign Retreater',desc:'Privacy is your luxury. You seek spaces where the world stops at the gate — private villas, staffed estates, and experiences where you are the only guest. Husseau excels at exactly this.',tags:['Private Villas','Mediterranean','Seclusion','Bespoke Dining']},
+  {name:'The Refined Explorer',desc:'You collect experiences, not souvenirs. Culture, art, cuisine, and private access drive you. You want to see the world as it truly is — through doors that open only for a few.',tags:['Cultural Access','Gastronomy','Europe & Asia','Insider Perspective']},
+  {name:'The Natural Sovereign',desc:'Wide horizons, extraordinary landscapes, and wildlife at dawn. You want the world at its most raw and beautiful — with the comforts of a place that truly understands you.',tags:['Private Safari','Remote Retreats','Africa','Wilderness Luxury']},
+  {name:'The Boundless Voyager',desc:'Freedom, movement, and the horizon. You travel with total flexibility — yacht charters, private aviation, new coastlines. Your journey has no fixed end, only beautiful detours.',tags:['Yacht Charter','Private Aviation','Coastal','Complete Freedom']}
+];
+
+var portalData={
+  'AMALFI2026':{name:'Eleanor'},
+  'HUSSEAU2026':{name:'Valued Client'},
+  'PARIS2026':{name:'James'}
+};
+
+var SYSTEM_PROMPT='You are the Husseau private travel concierge representing Husseau Luxury Travel, a Houston-based ultra-luxury travel advisory founded by Julien Nolan. Husseau services include: Exceptional Hotels and Resorts with elite partnerships (Mandarin Oriental, Four Seasons, Rosewood, Shangri-La, Relais and Chateaux and 16+ more). Private Villas and Estates. Yachts and Private Aviation. Bespoke Experiences. Dining in Paris, Tokyo, Monaco, London, Houston, Cannes. Exclusive events. Lifestyle services. Philosophy: curate access shaped by discretion, intention, refinement. Contact: info@husseau.com, +1 310 892 0433, husseau.com. Be warm, refined, unhurried. Keep responses to 1-3 paragraphs. When suggesting something bookable end with [WISHLIST: Item Name].';
+
+function showScreen(id,tabEl){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('screen-'+id).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
+  if(tabEl&&tabEl.classList&&tabEl.classList.contains('nav-tab')){tabEl.classList.add('active');}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function buildProgress(){
+  var p=document.getElementById('quiz-progress');
+  if(!p){return;}
+  p.innerHTML='';
+  for(var i=0;i<5;i++){
+    var d=document.createElement('div');
+    d.className='quiz-prog-dot'+(quizAnswers[i]!==null?' done':'');
+    p.appendChild(d);
+  }
+}
+
+function selectOpt(el,stepIdx,optIdx){
+  var parent=el.closest('.quiz-options');
+  parent.querySelectorAll('.quiz-opt').forEach(function(o){o.classList.remove('selected');});
+  el.classList.add('selected');
+  quizAnswers[stepIdx]=optIdx;
+  var nextBtn=el.closest('.quiz-step').querySelector('.quiz-next');
+  if(nextBtn){nextBtn.disabled=false;}
+  buildProgress();
+}
+
+function nextStep(toIdx){
+  document.querySelectorAll('.quiz-step').forEach(function(s){s.classList.remove('active');});
+  var steps=document.querySelectorAll('.quiz-step');
+  if(steps[toIdx]){steps[toIdx].classList.add('active');}
+}
+
+function prevStep(toIdx){
+  document.querySelectorAll('.quiz-step').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('.quiz-step')[toIdx].classList.add('active');
+}
+
+function showQuizResult(){
+  document.querySelectorAll('.quiz-step').forEach(function(s){s.classList.remove('active');});
+  var scores=[0,0,0,0];
+  quizAnswers.forEach(function(a){if(a!==null){scores[a]++;}});
+  var best=0;
+  for(var i=1;i<scores.length;i++){if(scores[i]>scores[best]){best=i;}}
+  var profile=profiles[best];
+  quizProfile=profile;
+  document.getElementById('result-profile-name').textContent=profile.name;
+  document.getElementById('result-profile-desc').textContent=profile.desc;
+  var tagsEl=document.getElementById('result-tags');
+  tagsEl.innerHTML='';
+  profile.tags.forEach(function(t){var span=document.createElement('span');span.className='result-tag';span.textContent=t;tagsEl.appendChild(span);});
+  document.getElementById('quiz-result').classList.add('active');
+  document.getElementById('sidebar-profile-text').textContent=profile.name;
+  var st=document.getElementById('sidebar-profile-tags');
+  st.innerHTML='';
+  profile.tags.forEach(function(t){var span=document.createElement('span');span.className='sidebar-tag';span.textContent=t;st.appendChild(span);});
+}
+
+function goToConcierge(){
+  showScreen('concierge',document.querySelectorAll('.nav-tab')[2]);
+  if(quizProfile){
+    setTimeout(function(){
+      document.getElementById('chat-input').value='My travel profile is "'+quizProfile.name+'". What kind of Husseau journey would you suggest for me?';
+      sendMessage();
+    },600);
+  }
+}
+
+function sendMessage(){
+  var input=document.getElementById('chat-input');
+  var text=input.value.trim();
+  if(!text||isTyping){return;}
+  input.value='';
+  input.style.height='auto';
+  document.getElementById('quick-prompts').style.display='none';
+  appendMsg('user',text);
+  chatHistory.push({role:'user',content:text});
+  showTyping();
+  callClaude();
+}
+
+function sendQuick(text){
+  document.getElementById('chat-input').value=text;
+  sendMessage();
+}
+
+function handleKey(e){
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}
+}
+
+function autoResize(el){
+  el.style.height='auto';
+  el.style.height=Math.min(el.scrollHeight,120)+'px';
+}
+
+function appendMsg(role,text,wishItem){
+  var msgs=document.getElementById('chat-messages');
+  var div=document.createElement('div');
+  div.className='msg '+role;
+  var sender=document.createElement('div');
+  sender.className='msg-sender';
+  sender.textContent=(role==='assistant')?'Husseau Concierge':'You';
+  var bubble=document.createElement('div');
+  bubble.className='msg-bubble';
+  bubble.innerHTML=text.replace(/\n/g,'<br>');
+  div.appendChild(sender);
+  div.appendChild(bubble);
+  if(wishItem){
+    var btn=document.createElement('button');
+    btn.className='add-to-wish';
+    btn.textContent='+ Add to Wish List';
+    btn.onclick=(function(item){return function(){addToWishlist(item);btn.textContent='Added';btn.disabled=true;};})(wishItem);
+    bubble.appendChild(document.createElement('br'));
+    bubble.appendChild(btn);
+  }
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function showTyping(){
+  isTyping=true;
+  document.getElementById('chat-send-btn').disabled=true;
+  var msgs=document.getElementById('chat-messages');
+  var div=document.createElement('div');
+  div.className='typing-indicator';
+  div.id='typing-indicator';
+  div.innerHTML='<div class="typing-dots"><span></span><span></span><span></span></div>';
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function hideTyping(){
+  isTyping=false;
+  document.getElementById('chat-send-btn').disabled=false;
+  var el=document.getElementById('typing-indicator');
+  if(el){el.remove();}
+}
+
+async function callClaude(){
+  var messages=chatHistory.slice(-10);
+  try{
+    var res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYSTEM_PROMPT,messages:messages})
+    });
+    var data=await res.json();
+    hideTyping();
+    var raw=(data.content&&data.content[0]&&data.content[0].text)?data.content[0].text:"I am sorry — I was not able to respond just now. Please try again, or reach us at info@husseau.com.";
+    var wishItem=null;
+    var wishMatch=raw.match(/\[WISHLIST:\s*([^\]]+)\]/);
+    if(wishMatch){wishItem=wishMatch[1].trim();raw=raw.replace(wishMatch[0],'').trim();}
+    chatHistory.push({role:'assistant',content:raw});
+    appendMsg('assistant',raw,wishItem);
+  }catch(e){
+    hideTyping();
+    appendMsg('assistant',"I am sorry — there seems to be a connection issue. Please reach us at info@husseau.com or +1 310 892 0433.");
+  }
+}
+
+function addToWishlist(item){wishlist.push(item);renderWishlist();}
+
+function removeFromWishlist(idx){wishlist.splice(idx,1);renderWishlist();}
+
+function renderWishlist(){
+  var el=document.getElementById('wishlist-items');
+  if(!wishlist.length){el.innerHTML='<div class="wishlist-empty">Your wish list is empty. Ask your concierge for ideas.</div>';return;}
+  el.innerHTML='';
+  wishlist.forEach(function(item,i){
+    var div=document.createElement('div');
+    div.className='wishlist-item';
+    div.innerHTML='<div><div class="wishlist-item-name">'+item+'</div></div><button class="wishlist-remove" onclick="removeFromWishlist('+i+')">x</button>';
+    el.appendChild(div);
+  });
+}
+
+function submitWishlist(){
+  if(!wishlist.length){alert('Your wish list is empty — ask your concierge for ideas first.');return;}
+  document.getElementById('submitted-overlay').classList.add('visible');
+}
+
+function checkPortal(){
+  var code=document
