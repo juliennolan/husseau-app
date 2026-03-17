@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>husseau</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400&family=Outfit:wght@400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--cream:#FAF7F2;--ivory:#F2EDE3;--ivory-deep:#E8E0D0;--sand:#C9B99A;--gold:#A8894A;--gold-light:#D4B87A;--charcoal:#2C2620;--muted:#7A6E62;--warm-white:#FDFAF5;--fd:'Cormorant Garamond',Georgia,serif;--fb:'Jost',system-ui,sans-serif;--fl:'Outfit',system-ui,sans-serif}
+html,body{min-height:100vh;background:var(--cream);color:var(--charcoal);font-family:var(--fb);font-weight:300}
+nav{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2.5rem;background:var(--warm-white);border-bottom:0.5px solid var(--ivory-deep);position:sticky;top:0;z-index:200}
+.nav-logo{font-family:var(--fl);font-size:1.35rem;font-weight:400;color:var(--charcoal);cursor:pointer}
+.nav-tabs{display:flex}
+.nav-tab{font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);padding:0.5rem 1.2rem;cursor:pointer;border:0.5px solid transparent;background:none;font-family:var(--fb);font-weight:300;transition:color 0.2s}
+.nav-tab:hover,.nav-tab.active{color:var(--gold)}
+.nav-tab.active{border-color:var(--ivory-deep);background:var(--cream)}
+.nav-portal-btn{font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;background:none;border:0.5px solid var(--sand);color:var(--muted);padding:0.5rem 1.1rem;cursor:pointer;font-family:var(--fb);font-weight:300;transition:all 0.2s}
+.nav-portal-btn:hover{border-color:var(--gold);color:var(--gold)}
+.screen{display:none;min-height:calc(100vh - 57px)}
+.screen.active{display:block;animation:fu 0.45s ease both}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.home-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 57px);text-align:center;padding:4rem 2rem}
+.ornament{width:1px;height:50px;background:var(--sand);margin:0 auto 2rem}
+.eyebrow{font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1.8rem}
+.home-title{font-family:var(--fd);font-size:clamp(3rem,6vw,5rem);font-weight:300;line-height:1.08;color:var(--charcoal);margin-bottom:1.5rem}
+.home-title em{font-style:italic;color:var(--gold)}
+.home-sub{font-family:var(--fd);font-size:1.05rem;font-style:italic;color:var(--muted);max-width:420px;line-height:1.9;margin-bottom:3.5rem}
+.home-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ivory-deep);border:0.5px solid var(--ivory-deep);max-width:780px;width:100%}
+.hcard{background:var(--warm-white);padding:2.2rem 1.8rem;cursor:pointer;transition:background 0.2s;text-align:left}
+.hcard:hover{background:var(--ivory)}
+.hcard-num{font-size:0.55rem;letter-spacing:0.25em;color:var(--gold);margin-bottom:0.8rem}
+.hcard-title{font-family:var(--fd);font-size:1.2rem;font-weight:300;color:var(--charcoal);margin-bottom:0.5rem;line-height:1.2}
+.hcard-desc{font-size:0.73rem;color:var(--muted);line-height:1.7}
+.hcard-arrow{font-size:0.65rem;color:var(--gold);margin-top:1rem;display:block}
+.quiz-wrap{max-width:680px;margin:0 auto;padding:5rem 2rem}
+.q-progress{display:flex;gap:4px;margin-bottom:3rem}
+.q-dot{flex:1;height:2px;background:var(--ivory-deep);transition:background 0.4s}
+.q-dot.done{background:var(--gold)}
+.q-step{display:none}
+.q-step.active{display:block;animation:fu 0.35s ease both}
+.q-num{font-size:0.58rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+.q-text{font-family:var(--fd);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:300;line-height:1.3;color:var(--charcoal);margin-bottom:2.5rem}
+.q-text em{font-style:italic;color:var(--gold)}
+.q-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.q-opt{padding:1.2rem 1.4rem;border:0.5px solid var(--ivory-deep);background:var(--warm-white);cursor:pointer;transition:all 0.2s;text-align:left}
+.q-opt:hover{border-color:var(--sand);background:var(--ivory)}
+.q-opt.sel{border-color:var(--gold);background:var(--ivory)}
+.q-opt-lbl{font-size:0.78rem;color:var(--charcoal);line-height:1.5;font-weight:400}
+.q-opt-sub{font-size:0.68rem;color:var(--muted);margin-top:0.2rem}
+.q-nav{display:flex;justify-content:space-between;align-items:center;margin-top:2.5rem}
+.q-back{font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--fb);font-weight:300}
+.q-back:hover{color:var(--gold)}
+.q-next{font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;background:var(--charcoal);color:var(--warm-white);border:none;padding:0.8rem 2rem;cursor:pointer;font-family:var(--fb);font-weight:300;transition:background 0.2s}
+.q-next:hover{background:var(--gold)}
+.q-next:disabled{opacity:0.35;cursor:default}
+.q-result{display:none;text-align:center;padding:3rem 0}
+.q-result.active{display:block;animation:fu 0.4s ease both}
+.r-mark{font-size:1.2rem;color:var(--gold);margin-bottom:1.5rem}
+.r-name{font-family:var(--fd);font-size:2rem;font-weight:300;color:var(--charcoal);margin-bottom:0.8rem}
+.r-desc{font-size:0.82rem;color:var(--muted);line-height:1.9;max-width:480px;margin:0 auto 2.5rem}
+.r-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:2.5rem}
+.r-tag{font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;border:0.5px solid var(--sand);color:var(--muted);padding:0.3rem 0.8rem}
+.r-cta{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-p{background:var(--charcoal);color:var(--warm-white);border:none;padding:0.85rem 2rem;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;font-family:var(--fb);font-weight:300;transition:background 0.2s}
+.btn-p:hover{background:var(--gold)}
+.btn-g{background:transparent;color:var(--charcoal);border:0.5px solid var(--sand);padding:0.85rem 2rem;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;font-family:var(--fb);font-weight:300;transition:all 0.2s}
+.btn-g:hover{border-color:var(--gold);color:var(--gold)}
+.cx-layout{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 57px)}
+.cx-side{background:var(--warm-white);border-right:0.5px solid var(--ivory-deep);padding:2rem 1.5rem;display:flex;flex-direction:column;gap:1.5rem}
+.cx-side-logo{font-family:var(--fl);font-size:1.1rem;font-weight:400;color:var(--charcoal);padding-bottom:1rem;border-bottom:0.5px solid var(--ivory-deep)}
+.side-lbl{font-size:0.55rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem}
+.side-prof{font-size:0.78rem;color:var(--muted);line-height:1.7}
+.side-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:0.4rem}
+.side-tag{font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;border:0.5px solid var(--ivory-deep);color:var(--muted);padding:0.2rem 0.5rem}
+.side-wl{flex:1;overflow-y:auto}
+.wl-item{display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:0.5px solid var(--ivory-deep)}
+.wl-name{font-size:0.75rem;color:var(--charcoal)}
+.wl-del{background:none;border:none;color:var(--sand);cursor:pointer;font-size:0.9rem}
+.wl-del:hover{color:var(--gold)}
+.wl-empty{font-size:0.75rem;color:var(--muted);font-style:italic;font-family:var(--fd)}
+.wl-submit{width:100%;background:var(--charcoal);color:var(--warm-white);border:none;padding:0.8rem;font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;font-family:var(--fb);font-weight:300;transition:background 0.2s;margin-top:auto}
+.wl-submit:hover{background:var(--gold)}
+.cx-chat{display:flex;flex-direction:column;height:calc(100vh - 57px)}
+.chat-hdr{padding:1.2rem 2rem;border-bottom:0.5px solid var(--ivory-deep);background:var(--cream)}
+.chat-hdr-t{font-family:var(--fd);font-size:1.1rem;font-weight:300;color:var(--charcoal)}
+.chat-hdr-s{font-size:0.65rem;color:var(--muted);margin-top:0.2rem}
+.chat-msgs{flex:1;overflow-y:auto;padding:2rem;display:flex;flex-direction:column;gap:1.2rem}
+.msg{max-width:72%;animation:fu 0.3s ease both}
+.msg.a{align-self:flex-start}
+.msg.u{align-self:flex-end}
+.msg-bub{padding:1rem 1.3rem;line-height:1.75;font-size:0.82rem}
+.msg.a .msg-bub{background:var(--warm-white);border:0.5px solid var(--ivory-deep);color:var(--charcoal)}
+.msg.u .msg-bub{background:var(--charcoal);color:var(--warm-white)}
+.msg-who{font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem}
+.msg.u .msg-who{text-align:right}
+.add-wl{display:inline-block;margin-top:0.5rem;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);cursor:pointer;border:0.5px solid var(--gold-light);padding:0.22rem 0.6rem;background:none;font-family:var(--fb);transition:all 0.2s}
+.add-wl:hover{background:var(--gold);color:var(--warm-white)}
+.typing{align-self:flex-start;max-width:72%}
+.t-dots{display:flex;gap:5px;padding:1rem 1.3rem;background:var(--warm-white);border:0.5px solid var(--ivory-deep)}
+.t-dots span{width:6px;height:6px;border-radius:50%;background:var(--sand);animation:bo 1.2s infinite}
+.t-dots span:nth-child(2){animation-delay:0.2s}
+.t-dots span:nth-child(3){animation-delay:0.4s}
+@keyframes bo{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+.chat-qp{display:flex;flex-wrap:wrap;gap:6px;padding:0.8rem 2rem 0}
+.chat-qp-btn{font-size:0.62rem;letter-spacing:0.08em;border:0.5px solid var(--ivory-deep);background:var(--warm-white);color:var(--muted);padding:0.35rem 0.75rem;cursor:pointer;font-family:var(--fb);transition:all 0.2s}
+.chat-qp-btn:hover{border-color:var(--gold);color:var(--gold)}
+.chat-inp-area{padding:1.2rem 2rem;border-top:0.5px solid var(--ivory-deep);background:var(--warm-white);display:flex;gap:0.8rem;align-items:flex-end}
+.chat-inp{flex:1;background:var(--cream);border:0.5px solid var(--ivory-deep);padding:0.75rem 1rem;font-size:0.82rem;font-family:var(--fb);font-weight:300;color:var(--charcoal);outline:none;resize:none;min-height:44px;max-height:120px;line-height:1.5;transition:border-color 0.2s}
+.chat-inp:focus{border-color:var(--gold)}
+.chat-send{background:var(--charcoal);color:var(--warm-white);border:none;padding:0.75rem 1.4rem;font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;font-family:var(--fb);font-weight:300;transition:background 0.2s;white-space:nowrap;align-self:stretch}
+.chat-send:hover{background:var(--gold)}
+.chat-send:disabled{opacity:0.4;cursor:default}
+.portal-wrap{max-width:440px;margin:0 auto;padding:6rem 2rem;text-align:center}
+.portal-title{font-family:var(--fd);font-size:2rem;font-weight:300;color:var(--charcoal);margin-bottom:0.6rem}
+.portal-sub{font-size:0.78rem;color:var(--muted);line-height:1.8;margin-bottom:2.5rem}
+.portal-form{display:flex;flex-direction:column;gap:0.8rem}
+.portal-inp{background:var(--warm-white);border:0.5px solid var(--ivory-deep);padding:0.85rem 1rem;font-size:0.85rem;font-family:var(--fb);font-weight:300;color:var(--charcoal);outline:none;text-align:center;letter-spacing:0.12em;transition:border-color 0.2s}
+.portal-inp:focus{border-color:var(--gold)}
+.portal-btn{background:var(--charcoal);color:var(--warm-white);border:none;padding:0.9rem;font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;font-family:var(--fb);font-weight:300;transition:background 0.2s}
+.portal-btn:hover{background:var(--gold)}
+.portal-hint{font-size:0.68rem;color:var(--muted);margin-top:0.5rem;font-family:var(--fd);font-style:italic}
+.portal-err{font-size:0.72rem;color:#a32d2d;margin-top:0.3rem;display:none}
+.portal-dash{display:none;max-width:860px;margin:0 auto;padding:3rem 2rem 5rem}
+.portal-dash.on{display:block;animation:fu 0.4s ease both}
+.dash-hdr{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:0.5px solid var(--ivory-deep)}
+.dash-welcome{font-family:var(--fd);font-size:1.8rem;font-weight:300;color:var(--charcoal)}
+.dash-welcome span{font-style:italic;color:var(--gold)}
+.dash-out{font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--fb)}
+.dash-out:hover{color:var(--gold)}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem}
+.dash-card{background:var(--warm-white);border:0.5px solid var(--ivory-deep);padding:1.8rem}
+.dash-card-lbl{font-size:0.58rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem}
+.dash-card-title{font-family:var(--fd);font-size:1.3rem;font-weight:300;color:var(--charcoal);margin-bottom:0.5rem}
+.dash-card-body{font-size:0.78rem;color:var(--muted);line-height:1.8}
+.itin-days{margin-top:1.5rem}
+.itin-day{border-left:1px solid var(--ivory-deep);padding-left:1.2rem;margin-bottom:1.5rem;position:relative}
+.itin-day::before{content:'';position:absolute;left:-3.5px;top:6px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+.itin-lbl{font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem}
+.itin-title{font-family:var(--fd);font-size:1rem;font-weight:300;color:var(--charcoal);margin-bottom:0.3rem}
+.itin-body{font-size:0.75rem;color:var(--muted);line-height:1.7}
+.contact-strip{background:var(--ivory);border:0.5px solid var(--ivory-deep);padding:1.5rem 1.8rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.contact-lbl{font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem}
+.contact-val{font-family:var(--fd);font-size:0.95rem;color:var(--charcoal)}
+.contact-val a{color:var(--charcoal);text-decoration:none}
+.contact-val a:hover{color:var(--gold)}
+footer{background:var(--charcoal);padding:2rem 2.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.ft-logo{font-family:var(--fl);font-size:1.1rem;font-weight:400;color:rgba(253,250,245,0.85)}
+.ft-copy{font-size:0.62rem;color:rgba(253,250,245,0.3)}
+.ft-contact{font-size:0.65rem;color:rgba(253,250,245,0.4)}
+.ft-contact a{color:rgba(253,250,245,0.4);text-decoration:none}
+.overlay{display:none;position:fixed;inset:0;background:rgba(44,38,32,0.88);z-index:500;align-items:center;justify-content:center}
+.overlay.on{display:flex;animation:fu 0.3s ease both}
+.overlay-box{background:var(--warm-white);max-width:440px;padding:3.5rem;text-align:center;border:0.5px solid var(--ivory-deep)}
+.overlay-mark{font-size:1.5rem;color:var(--gold);margin-bottom:1.2rem}
+.overlay-title{font-family:var(--fd);font-size:2rem;font-weight:300;color:var(--charcoal);margin-bottom:0.8rem}
+.overlay-sub{font-size:0.8rem;color:var(--muted);line-height:1.9;margin-bottom:2rem}
+.overlay-close{background:var(--charcoal);color:var(--warm-white);border:none;padding:0.8rem 2rem;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;font-family:var(--fb)}
+.overlay-close:hover{background:var(--gold)}
+@media(max-width:768px){.home-cards{grid-template-columns:1fr}.cx-layout{grid-template-columns:1fr}.cx-side{display:none}.q-opts{grid-template-columns:1fr}.dash-grid{grid-template-columns:1fr}nav{padding:1rem 1.2rem}.nav-tabs{display:none}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo" onclick="go('home')">husseau</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="go('home',this)">Home</button>
+    <button class="nav-tab" onclick="go('quiz',this)">Travel Profile</button>
+    <button class="nav-tab" onclick="go('concierge',this)">Concierge</button>
+  </div>
+  <button class="nav-portal-btn" onclick="go('portal',this)">Client Portal</button>
+</nav>
+
+<div class="screen active" id="s-home">
+  <div class="home-wrap">
+    <div class="ornament"></div>
+    <p class="eyebrow">Haute Couture Journeys &nbsp;·&nbsp; Houston-based. Operating globally.</p>
+    <h1 class="home-title">Your private<br><em>husseau</em> experience</h1>
+    <p class="home-sub">This is not a website. This is your personal space — to discover your travel style, speak with your concierge, and manage your journey.</p>
+    <div class="home-cards">
+      <div class="hcard" onclick="go('quiz',document.querySelectorAll('.nav-tab')[1])">
+        <div class="hcard-num">01</div>
+        <div class="hcard-title">Discover Your Travel Profile</div>
+        <div class="hcard-desc">A short quiz that defines your travel style and what kind of journeys speak to you.</div>
+        <span class="hcard-arrow">Begin &rarr;</span>
+      </div>
+      <div class="hcard" onclick="go('concierge',document.querySelectorAll('.nav-tab')[2])">
+        <div class="hcard-num">02</div>
+        <div class="hcard-title">Speak With Your Husseau Concierge</div>
+        <div class="hcard-desc">An AI concierge trained on Husseau's philosophy. Ask anything, build your wish list.</div>
+        <span class="hcard-arrow">Open &rarr;</span>
+      </div>
+      <div class="hcard" onclick="go('portal',null)">
+        <div class="hcard-num">03</div>
+        <div class="hcard-title">Client Portal</div>
+        <div class="hcard-desc">Existing Husseau clients — access your private itinerary, contacts, and journey details.</div>
+        <span class="hcard-arrow">Enter &rarr;</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="s-quiz">
+  <div class="quiz-wrap">
+    <div class="q-progress" id="qprog"></div>
+    <div class="q-step active" id="qs0">
+      <div class="q-num">Question 1 of 5</div>
+      <h2 class="q-text">When you close your eyes and imagine <em>the perfect journey</em>, what do you see first?</h2>
+      <div class="q-opts">
+        <div class="q-opt" onclick="pick(this,0,0)"><div class="q-opt-lbl">A clifftop villa at golden hour</div><div class="q-opt-sub">Mediterranean light, sea below, silence</div></div>
+        <div class="q-opt" onclick="pick(this,0,1)"><div class="q-opt-lbl">An ancient city, no crowds</div><div class="q-opt-sub">Culture, art, private access</div></div>
+        <div class="q-opt" onclick="pick(this,0,2)"><div class="q-opt-lbl">A wilderness camp at dawn</div><div class="q-opt-sub">Wildlife, vastness, stillness</div></div>
+        <div class="q-opt" onclick="pick(this,0,3)"><div class="q-opt-lbl">A private yacht, open water</div><div class="q-opt-sub">Freedom, the horizon, total privacy</div></div>
+      </div>
+      <div class="q-nav"><span></span><button class="q-next" id="qn0" onclick="qs(1)" disabled>Continue &rarr;</button></div>
+    </div>
+    <div class="q-step" id="qs1">
+      <div class="q-num">Question 2 of 5</div>
+      <h2 class="q-text">How do you prefer your <em>days</em> to feel?</h2>
+      <div class="q-opts">
+        <div class="q-opt" onclick="pick(this,1,0)"><div class="q-opt-lbl">Deliberately unhurried</div><div class="q-opt-sub">No agenda — only rhythm and mood</div></div>
+        <div class="q-opt" onclick="pick(this,1,1)"><div class="q-opt-lbl">Richly curated</div><div class="q-opt-sub">Each hour purposeful, nothing wasted</div></div>
+        <div class="q-opt" onclick="pick(this,1,2)"><div class="q-opt-lbl">Spontaneous within structure</div><div class="q-opt-sub">A foundation — but space to wander</div></div>
+        <div class="q-opt" onclick="pick(this,1,3)"><div class="q-opt-lbl">Complete immersion</div><div class="q-opt-sub">Lose myself in place entirely</div></div>
+      </div>
+      <div class="q-nav"><button class="q-back" onclick="qs(0)">&larr; Back</button><button class="q-next" id="qn1" onclick="qs(2)" disabled>Continue &rarr;</button></div>
+    </div>
+    <div class="q-step" id="qs2">
+      <div class="q-num">Question 3 of 5</div>
+      <h2 class="q-text">What does <em>luxury</em> mean to you when you travel?</h2>
+      <div class="q-opts">
+        <div class="q-opt" onclick="pick(this,2,0)"><div class="q-opt-lbl">Absolute privacy</div><div class="q-opt-sub">No one else. Just us.</div></div>
+        <div class="q-opt" onclick="pick(this,2,1)"><div class="q-opt-lbl">Access no one else has</div><div class="q-opt-sub">The closed door, opened</div></div>
+        <div class="q-opt" onclick="pick(this,2,2)"><div class="q-opt-lbl">Flawless service, invisible</div><div class="q-opt-sub">Everything handled before I notice</div></div>
+        <div class="q-opt" onclick="pick(this,2,3)"><div class="q-opt-lbl">Extraordinary spaces</div><div class="q-opt-sub">Architecture, design, beauty of place</div></div>
+      </div>
+      <div class="q-nav"><button class="q-back" onclick="qs(1)">&larr; Back</button><button class="q-next" id="qn2" onclick="qs(3)" disabled>Continue &rarr;</button></div>
+    </div>
+    <div class="q-step" id="qs3">
+      <div class="q-num">Question 4 of 5</div>
+      <h2 class="q-text">Which region calls to you <em>most deeply</em> right now?</h2>
+      <div class="q-opts">
+        <div class="q-opt" onclick="pick(this,3,0)"><div class="q-opt-lbl">Europe</div><div class="q-opt-sub">Italy, France, Greece, Monaco</div></div>
+        <div class="q-opt" onclick="pick(this,3,1)"><div class="q-opt-lbl">Asia and the Pacific</div><div class="q-opt-sub">Japan, Bali, French Polynesia</div></div>
+        <div class="q-opt" onclick="pick(this,3,2)"><div class="q-opt-lbl">Africa</div><div class="q-opt-sub">Tanzania, Kenya, Morocco</div></div>
+        <div class="q-opt" onclick="pick(this,3,3)"><div class="q-opt-lbl">Surprise me</div><div class="q-opt-sub">I trust Husseau's judgment entirely</div></div>
+      </div>
+      <div class="q-nav"><button class="q-back" onclick="qs(2)">&larr; Back</button><button class="q-next" id="qn3" onclick="qs(4)" disabled>Continue &rarr;</button></div>
+    </div>
+    <div class="q-step" id="qs4">
+      <div class="q-num">Question 5 of 5</div>
+      <h2 class="q-text">If your ideal trip had a single <em>defining moment</em>, it would be...</h2>
+      <div class="q-opts">
+        <div class="q-opt" onclick="pick(this,4,0)"><div class="q-opt-lbl">A private dinner in an impossible place</div><div class="q-opt-sub">A rooftop, a cave, a vineyard at midnight</div></div>
+        <div class="q-opt" onclick="pick(this,4,1)"><div class="q-opt-lbl">A cultural encounter, no tourists</div><div class="q-opt-sub">A museum before opening, a studio visit</div></div>
+        <div class="q-opt" onclick="pick(this,4,2)"><div class="q-opt-lbl">A natural spectacle, entirely private</div><div class="q-opt-sub">Safari at dawn, swimming with no one else</div></div>
+        <div class="q-opt" onclick="pick(this,4,3)"><div class="q-opt-lbl">Pure stillness in a perfect space</div><div class="q-opt-sub">A bath drawn at sunset, nothing asked of me</div></div>
+      </div>
+      <div class="q-nav"><button class="q-back" onclick="qs(3)">&larr; Back</button><button class="q-next" id="qn4" onclick="result()" disabled>See My Profile &rarr;</button></div>
+    </div>
+    <div class="q-result" id="qresult">
+      <div class="r-mark">&#10022;</div>
+      <div class="r-name" id="rname"></div>
+      <p class="r-desc" id="rdesc"></p>
+      <div class="r-tags" id="rtags"></div>
+      <div class="r-cta">
+        <button class="btn-p" onclick="goConcierge()">Speak With Your Concierge &rarr;</button>
+        <button class="btn-g" onclick="go('home',null)">Return Home</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="s-concierge">
+  <div class="cx-layout">
+    <div class="cx-side">
+      <div class="cx-side-logo">husseau<br><span style="font-size:0.58rem;font-family:var(--fb);letter-spacing:0.18em;color:var(--muted);text-transform:uppercase;font-weight:300;">Concierge</span></div>
+      <div>
+        <div class="side-lbl">Your Profile</div>
+        <div class="side-prof" id="side-prof">Complete your Travel Profile quiz to personalise this experience.</div>
+        <div class="side-tags" id="side-tags"></div>
+      </div>
+      <div class="side-wl">
+        <div class="side-lbl">Wish List</div>
+        <div id="wl-items"><div class="wl-empty">Your wish list is empty. Ask your concierge for ideas.</div></div>
+      </div>
+      <button class="wl-submit" onclick="submitWL()">Submit Wish List to Husseau</button>
+    </div>
+    <div class="cx-chat">
+      <div class="chat-hdr">
+        <div class="chat-hdr-t">Your Husseau Concierge</div>
+        <div class="chat-hdr-s">Powered by Husseau's philosophy of discretion, intention and depth</div>
+      </div>
+      <div class="chat-qp" id="chat-qp">
+        <button class="chat-qp-btn" onclick="sq('What makes Husseau different from a regular travel agency?')">What makes Husseau different?</button>
+        <button class="chat-qp-btn" onclick="sq('Suggest a journey for someone who wants total privacy in Europe.')">Private Europe journey</button>
+        <button class="chat-qp-btn" onclick="sq('What are the best African safari experiences Husseau can arrange?')">African safari options</button>
+        <button class="chat-qp-btn" onclick="sq('Tell me about the hotel partner programs and client benefits.')">Hotel partner perks</button>
+      </div>
+      <div class="chat-msgs" id="chat-msgs">
+        <div class="msg a">
+          <div class="msg-who">Husseau Concierge</div>
+          <div class="msg-bub">Bonsoir. I am your Husseau concierge — here to help you imagine, plan, and refine a journey that is entirely your own.<br><br>You may ask me anything: destinations, experiences, what to expect from Husseau, or simply where to begin. What is on your mind?</div>
+        </div>
+      </div>
+      <div class="chat-inp-area">
+        <textarea class="chat-inp" id="chat-inp" placeholder="Ask your concierge anything..." rows="1" onkeydown="ck(event)" oninput="ar(this)"></textarea>
+        <button class="chat-send" id="chat-btn" onclick="send()">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="s-portal">
+  <div class="portal-wrap" id="p-login">
+    <div class="ornament"></div>
+    <div class="portal-title">Client Portal</div>
+    <p class="portal-sub">Enter your private access code to view your journey details, itinerary, and concierge contacts.</p>
+    <div class="portal-form">
+      <input class="portal-inp" id="p-code" type="text" placeholder="ACCESS CODE" maxlength="12" oninput="this.value=this.value.toUpperCase()">
+      <div class="portal-err" id="p-err">Code not recognised. Please check and try again, or contact info@husseau.com</div>
+      <button class="portal-btn" onclick="login()">Enter &rarr;</button>
+      <div class="portal-hint">Your access code was provided by Julien or your Husseau advisor. Try: AMALFI2026</div>
+    </div>
+  </div>
+  <div class="portal-dash" id="p-dash">
+    <div class="dash-hdr">
+      <div>
+        <div style="font-size:0.58rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;">Private Client Portal</div>
+        <div class="dash-welcome">Welcome back, <span id="p-name">Eleanor</span>.</div>
+      </div>
+      <button class="dash-out" onclick="logout()">Sign Out</button>
+    </div>
+    <div class="dash-grid">
+      <div class="dash-card">
+        <div class="dash-card-lbl">Your Journey</div>
+        <div class="dash-card-title">La Dolce Vita — Amalfi and Rome</div>
+        <div class="dash-card-body">10 nights &middot; 2 travellers &middot; Departing May 12, 2026<br><br>Status: <span style="color:var(--gold);font-weight:400;">Confirmed and Arranged</span></div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-lbl">Your Advisor</div>
+        <div class="dash-card-title">Julien Nolan</div>
+        <div class="dash-card-body">Founder and Lead Advisor<br><br><a href="mailto:info@husseau.com" style="color:var(--gold);">info@husseau.com</a><br><a href="tel:+13108920433" style="color:var(--muted);">+1 310 892 0433</a></div>
+      </div>
+    </div>
+    <div class="dash-card" style="margin-bottom:1rem">
+      <div class="dash-card-lbl">Your Itinerary</div>
+      <div class="dash-card-title" style="margin-bottom:1.5rem">Day by Day</div>
+      <div class="itin-days">
+        <div class="itin-day"><div class="itin-lbl">Day 1 &middot; May 12 &middot; Arrival</div><div class="itin-title">Naples — Private Transfer to Positano</div><div class="itin-body">Met on arrival at Naples Capodichino. Private Mercedes transfer along the Amalfi Drive. Check-in at your cliffside villa — champagne and dinner prepared on your terrace as the sun sets over the Tyrrhenian Sea.</div></div>
+        <div class="itin-day"><div class="itin-lbl">Days 2–4 &middot; Positano</div><div class="itin-title">Villa Immersion — Time at Your Own Rhythm</div><div class="itin-body">Private chef breakfasts. A morning yacht to Capri with a local captain. Private guided walk through coastal paths. Chef's table dinner at a restaurant not open to the public.</div></div>
+        <div class="itin-day"><div class="itin-lbl">Days 5–7 &middot; Ravello and Amalfi</div><div class="itin-title">Gardens, Coast and La Dolce Vita</div><div class="itin-body">Private dawn access to Villa Cimbrone gardens. Ceramic workshop with a Vietri master. Sunset aperitivo on Amalfi's hidden rooftop — yours alone for the evening.</div></div>
+        <div class="itin-day"><div class="itin-lbl">Days 8–10 &middot; Rome</div><div class="itin-title">The Eternal City — Private and Unhurried</div><div class="itin-body">Vatican before the crowds with a private art historian. Lunch reserved exclusively through Husseau's dining program. Final farewell dinner, Campo de Fiori, under the stars.</div></div>
+      </div>
+    </div>
+    <div class="contact-strip">
+      <div><div class="contact-lbl">24/7 Concierge</div><div class="contact-val"><a href="tel:+13108920433">+1 310 892 0433</a></div></div>
+      <div><div class="contact-lbl">Email</div><div class="contact-val"><a href="mailto:info@husseau.com">info@husseau.com</a></div></div>
+      <div><div class="contact-lbl">Website</div><div class="contact-val"><a href="https://husseau.com" target="_blank">husseau.com</a></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="wl-overlay">
+  <div class="overlay-box">
+    <div class="overlay-mark">&#10022;</div>
+    <div class="overlay-title">Wish list received.</div>
+    <p class="overlay-sub">Your wish list has been submitted to the Husseau team. Julien or your advisor will be in touch within 24 hours.<br><br>info@husseau.com &nbsp;&middot;&nbsp; +1 310 892 0433</p>
+    <button class="overlay-close" onclick="document.getElementById('wl-overlay').classList.remove('on')">Close</button>
+  </div>
+</div>
+
+<footer>
+  <div class="ft-logo">husseau</div>
+  <div class="ft-contact"><a href="mailto:info@husseau.com">info@husseau.com</a> &nbsp;&middot;&nbsp; <a href="tel:+13108920433">+1 310 892 0433</a> &nbsp;&middot;&nbsp; <a href="https://husseau.com" target="_blank">husseau.com</a></div>
+  <div class="ft-copy">Houston-based. Operating globally. &copy; 2026</div>
+</footer>
+
+<script>
+var WL=[],CH=[],busy=false,QA=[null,null,null,null,null],QP=null;
+var PD={'AMALFI2026':'Eleanor','HUSSEAU2026':'Valued Client','PARIS2026':'James'};
+var PR=[
+  {n:'The Sovereign Retreater',d:'Privacy is your luxury. You seek spaces where the world stops at the gate — private villas, staffed estates, and experiences where you are the only guest. Husseau excels at exactly this.',t:['Private Villas','Mediterranean','Seclusion','Bespoke Dining']},
+  {n:'The Refined Explorer',d:'You collect experiences, not souvenirs. Culture, art, cuisine, and private access drive you. You want to see the world as it truly is — through doors that open only for a few.',t:['Cultural Access','Gastronomy','Europe and Asia','Insider Perspective']},
+  {n:'The Natural Sovereign',d:'Wide horizons, extraordinary landscapes, and wildlife at dawn. You want the world at its most raw and beautiful — with the comforts of a place that truly understands you.',t:['Private Safari','Remote Retreats','Africa','Wilderness Luxury']},
+  {n:'The Boundless Voyager',d:'Freedom, movement, and the horizon. You travel with total flexibility — yacht charters, private aviation, new coastlines. Your journey has no fixed end, only beautiful detours.',t:['Yacht Charter','Private Aviation','Coastal','Complete Freedom']}
+];
+var SP='You are the Husseau private travel concierge representing Husseau Luxury Travel, a Houston-based ultra-luxury travel advisory founded by Julien Nolan. Services: exceptional hotels with elite partnerships including Mandarin Oriental, Four Seasons, Rosewood, Shangri-La, Relais and Chateaux and 16 more. Private villas. Yachts and private aviation. Bespoke experiences. Dining in Paris, Tokyo, Monaco, London, Houston, Cannes. Exclusive events. Philosophy: curate access shaped by discretion, intention, refinement. Contact: info@husseau.com, +1 310 892 0433, husseau.com. Be warm, refined, unhurried. Keep responses to 1-3 paragraphs. When suggesting something bookable end with [WISHLIST: Item Name].';
+
+function go(id,el){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('s-'+id).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
+  if(el&&el.classList&&el.classList.contains('nav-tab')){el.classList.add('active');}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function mkprog(){
+  var p=document.getElementById('qprog');
+  if(!p){return;}
+  p.innerHTML='';
+  for(var i=0;i<5;i++){
+    var d=document.createElement('div');
+    d.className='q-dot'+(QA[i]!==null?' done':'');
+    p.appendChild(d);
+  }
+}
+
+function pick(el,si,oi){
+  el.closest('.q-opts').querySelectorAll('.q-opt').forEach(function(o){o.classList.remove('sel');});
+  el.classList.add('sel');
+  QA[si]=oi;
+  var nb=document.getElementById('qn'+si);
+  if(nb){nb.disabled=false;}
+  mkprog();
+}
+
+function qs(i){
+  for(var j=0;j<5;j++){var s=document.getElementById('qs'+j);if(s){s.classList.remove('active');}}
+  var t=document.getElementById('qs'+i);
+  if(t){t.classList.add('active');}
+}
+
+function result(){
+  for(var j=0;j<5;j++){var s=document.getElementById('qs'+j);if(s){s.classList.remove('active');}}
+  var sc=[0,0,0,0];
+  QA.forEach(function(a){if(a!==null){sc[a]++;}});
+  var b=0;
+  for(var i=1;i<4;i++){if(sc[i]>sc[b]){b=i;}}
+  var p=PR[b];QP=p;
+  document.getElementById('rname').textContent=p.n;
+  document.getElementById('rdesc').textContent=p.d;
+  var te=document.getElementById('rtags');te.innerHTML='';
+  p.t.forEach(function(t){var s=document.createElement('span');s.className='r-tag';s.textContent=t;te.appendChild(s);});
+  document.getElementById('qresult').classList.add('active');
+  document.getElementById('side-prof').textContent=p.n;
+  var se=document.getElementById('side-tags');se.innerHTML='';
+  p.t.forEach(function(t){var s=document.createElement('span');s.className='side-tag';s.textContent=t;se.appendChild(s);});
+}
+
+function goConcierge(){
+  go('concierge',document.querySelectorAll('.nav-tab')[2]);
+  if(QP){setTimeout(function(){document.getElementById('chat-inp').value='My travel profile is "'+QP.n+'". What Husseau journey would you suggest?';send();},600);}
+}
+
+function send(){
+  var inp=document.getElementById('chat-inp');
+  var txt=inp.value.trim();
+  if(!txt||busy){return;}
+  inp.value='';inp.style.height='auto';
+  document.getElementById('chat-qp').style.display='none';
+  addMsg('u',txt);
+  CH.push({role:'user',content:txt});
+  showDots();
+  callAPI();
+}
+
+function sq(t){document.getElementById('chat-inp').value=t;send();}
+function ck(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}}
+function ar(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px';}
+
+function addMsg(role,txt,wi){
+  var msgs=document.getElementById('chat-msgs');
+  var div=document.createElement('div');div.className='msg '+role;
+  var who=document.createElement('div');who.className='msg-who';who.textContent=role==='a'?'Husseau Concierge':'You';
+  var bub=document.createElement('div');bub.className='msg-bub';bub.innerHTML=txt.replace(/\n/g,'<br>');
+  div.appendChild(who);div.appendChild(bub);
+  if(wi){
+    var btn=document.createElement('button');btn.className='add-wl';btn.textContent='+ Add to Wish List';
+    btn.onclick=(function(item){return function(){WL.push(item);renderWL();btn.textContent='Added';btn.disabled=true;};})(wi);
+    bub.appendChild(document.createElement('br'));bub.appendChild(btn);
+  }
+  msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
+}
+
+function showDots(){
+  busy=true;document.getElementById('chat-btn').disabled=true;
+  var msgs=document.getElementById('chat-msgs');
+  var div=document.createElement('div');div.className='typing';div.id='tdots';
+  div.innerHTML='<div class="t-dots"><span></span><span></span><span></span></div>';
+  msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
+}
+
+function hideDots(){
+  busy=false;document.getElementById('chat-btn').disabled=false;
+  var el=document.getElementById('tdots');if(el){el.remove();}
+}
+
+async function callAPI(){
+  try{
+    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SP,messages:CH.slice(-10)})});
+    var d=await r.json();
+    hideDots();
+    var raw=d.content&&d.content[0]&&d.content[0].text?d.content[0].text:'I am sorry — please try again or contact info@husseau.com';
+    var wi=null,wm=raw.match(/\[WISHLIST:\s*([^\]]+)\]/);
+    if(wm){wi=wm[1].trim();raw=raw.replace(wm[0],'').trim();}
+    CH.push({role:'assistant',content:raw});
+    addMsg('a',raw,wi);
+  }catch(e){hideDots();addMsg('a','Connection issue — please contact info@husseau.com or +1 310 892 0433.');}
+}
+
+function renderWL(){
+  var el=document.getElementById('wl-items');
+  if(!WL.length){el.innerHTML='<div class="wl-empty">Your wish list is empty. Ask your concierge for ideas.</div>';return;}
+  el.innerHTML='';
+  WL.forEach(function(item,i){
+    var div=document.createElement('div');div.className='wl-item';
+    div.innerHTML='<div class="wl-name">'+item+'</div><button class="wl-del" onclick="WL.splice('+i+',1);renderWL()">x</button>';
+    el.appendChild(div);
+  });
+}
+
+function submitWL(){
+  if(!WL.length){alert('Your wish list is empty — ask your concierge for ideas first.');return;}
+  document.getElementById('wl-overlay').classList.add('on');
+}
+
+function login(){
+  var code=document.getElementById('p-code').value.trim().toUpperCase();
+  var err=document.getElementById('p-err');
+  if(PD[code]){
+    err.style.display='none';
+    document.getElementById('p-login').style.display='none';
+    document.getElementById('p-name').textContent=PD[code];
+    document.getElementById('p-dash').classList.add('on');
+  }else{err.style.display='block';}
+}
+
+function logout(){
+  document.getElementById('p-login').style.display='block';
+  document.getElementById('p-dash').classList.remove('on');
+  document.getElementById('p-code').value='';
+  document.getElementById('p-err').style.display='none';
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  mkprog();
+  var pc=document.getElementById('p-code');
+  if(pc){pc.addEventListener('keydown',function(e){if(e.key==='Enter'){login();}});}
+});
+</script>
+</body>
+</html>
